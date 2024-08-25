@@ -1,0 +1,17 @@
+
+GET http://localhost:8080/tasks/ HTTP/1.1
+Accept: : application/json
+
+###
+
+GET http://localhost:8080/info?url=https://www.youtube.com/watch?v=lCok_iWOIXw HTTP/1.1
+Accept: : application/json
+
+###
+
+POST http://localhost:8080/tasks/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "url": "https://www.youtube.com/watch?v=lCok_iWOIXw"
+}
