@@ -1,6 +1,10 @@
 package lib
 
-import "rul.sh/go-ytmp3/utils"
+import (
+	"time"
+
+	"rul.sh/go-ytmp3/utils"
+)
 
 type Task struct {
 	Url       string `json:"url"`
@@ -48,6 +52,7 @@ func InitTaskScheduler() *TaskScheduler {
 				return
 			default:
 				if len(queue) == 0 {
+					time.Sleep(1 * time.Second)
 					continue
 				}
 
