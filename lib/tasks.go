@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"time"
 
 	"rul.sh/go-ytmp3/utils"
@@ -74,6 +75,10 @@ func InitTaskScheduler() *TaskScheduler {
 					Artist:    task.Artist,
 					Album:     task.Album,
 				})
+
+				if err != nil {
+					fmt.Println(err)
+				}
 
 				task.IsPending = false
 				task.Error = err

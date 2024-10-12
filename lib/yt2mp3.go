@@ -18,8 +18,10 @@ import (
 	"rul.sh/go-ytmp3/utils"
 )
 
-func fetchVideo(video *goutubedl.Result, out string, ch chan error) {
-	dl, err := video.Download(context.Background(), "best")
+func fetchAudio(video *goutubedl.Result, out string, ch chan error) {
+	dl, err := video.DownloadWithOptions(context.Background(), goutubedl.DownloadOptions{
+		DownloadAudioOnly: true,
+	})
 	if err != nil {
 		ch <- err
 		return
@@ -167,7 +169,7 @@ func Yt2Mp3(video *goutubedl.Result, options Yt2Mp3Options) (string, error) {
 		videoSlug = slug.Make(title)
 	}
 
-	videoSrc := fmt.Sprintf("%s/%s.mp4", tmpDir, videoSlug)
+	audioSrc := fmt.Sprintf("%s/%s-src.mp3", tmpDir, videoSlug)
 	thumbnail := fmt.Sprintf("%s/%s.jpg", tmpDir, videoSlug)
 	out := fmt.Sprintf("%s/%s.mp3", options.OutDir, videoSlug)
 
@@ -178,7 +180,7 @@ func Yt2Mp3(video *goutubedl.Result, options Yt2Mp3Options) (string, error) {
 	videoCh := make(chan error)
 	thumbCh := make(chan error)
 
-	go fetchVideo(video, videoSrc, videoCh)
+	go fetchAudio(video, audioSrc, videoCh)
 	go fetchThumbnail(video, thumbnail, thumbCh)
 
 	err := <-videoCh
@@ -196,7 +198,7 @@ func Yt2Mp3(video *goutubedl.Result, options Yt2Mp3Options) (string, error) {
 	convertCh := make(chan error)
 
 	go convertToMp3(ConvertOptions{
-		Video:     videoSrc,
+		Video:     audioSrc,
 		Thumbnail: thumbnail,
 		Title:     title,
 		Artist:    artist,
