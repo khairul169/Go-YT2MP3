@@ -21,6 +21,7 @@ import (
 func fetchAudio(video *goutubedl.Result, out string, ch chan error) {
 	dl, err := video.DownloadWithOptions(context.Background(), goutubedl.DownloadOptions{
 		DownloadAudioOnly: true,
+		AudioFormats:      "best",
 	})
 	if err != nil {
 		ch <- err
@@ -115,6 +116,7 @@ func convertToMp3(data ConvertOptions, ch chan error) {
 	input := []*ffmpeg.Stream{ffmpeg.Input(data.Video).Audio()}
 	args := ffmpeg.KwArgs{
 		"format":        "mp3",
+		"ab":            "320k",
 		"id3v2_version": "3",
 		"write_id3v1":   "1",
 		"metadata": []string{
